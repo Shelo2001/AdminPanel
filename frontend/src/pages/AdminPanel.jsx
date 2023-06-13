@@ -1,12 +1,11 @@
 import { UploadOutlined } from "@ant-design/icons";
 import {
+    Alert,
     Button,
     Card,
     Col,
-    Divider,
     Form,
     Input,
-    Radio,
     Row,
     Select,
     Space,
@@ -14,15 +13,22 @@ import {
 } from "antd";
 import TextArea from "antd/es/input/TextArea";
 import { Option } from "antd/es/mentions";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Helmet } from "react-helmet";
+import { useCategories } from "../services/categories";
 
 const AdminPanel = () => {
     const [fileList, setFileList] = useState([]);
+    const [categoryName, setCategoryName] = useState("");
+
+    const { createCategory, getCategories, categories, success } =
+        useCategories();
+
+    useEffect(() => {
+        getCategories();
+    }, []);
 
     const handleBeforeUpload = (file) => {
-        // Add custom logic to handle the file upload
-        // For example, you can convert the file to Base64 and store it in the state
         const reader = new FileReader();
         reader.onload = () => {
             const dataURL = reader.result;
@@ -44,7 +50,7 @@ const AdminPanel = () => {
         };
         reader.readAsDataURL(file);
 
-        return false; // Prevent default upload behavior
+        return false;
     };
 
     const handleRemove = (file) => {
@@ -52,7 +58,10 @@ const AdminPanel = () => {
         setFileList(updatedList);
     };
     const handleProductSubmit = () => {};
-    const handleCategorySubmit = () => {};
+    const handleCategorySubmit = () => {
+        let data = { name: categoryName };
+        createCategory(data);
+    };
 
     const handleChange = (value) => {
         console.log(`selected ${value}`);
@@ -60,6 +69,13 @@ const AdminPanel = () => {
 
     return (
         <div style={{ minHeight: "80vh" }}>
+            {success && (
+                <Alert
+                    style={{ marginTop: "20px", marginBottom: "20px" }}
+                    message={success}
+                    type="success"
+                />
+            )}
             <Helmet>
                 <title>Admin Panel</title>
                 <meta
@@ -144,18 +160,11 @@ const AdminPanel = () => {
                                     onChange={handleChange}
                                     optionLabelProp="label"
                                 >
-                                    <Option value="china" label="China">
-                                        <Space>China</Space>
-                                    </Option>
-                                    <Option value="usa" label="USA">
-                                        <Space>USA</Space>
-                                    </Option>
-                                    <Option value="japan" label="Japan">
-                                        <Space>Japan</Space>
-                                    </Option>
-                                    <Option value="korea" label="Korea">
-                                        <Space>Korea</Space>
-                                    </Option>
+                                    {categories.map((c) => (
+                                        <Option value={c.name} label={c.name}>
+                                            <Space>{c.name}</Space>
+                                        </Option>
+                                    ))}
                                 </Select>
                             </Form.Item>
 
@@ -221,7 +230,11 @@ const AdminPanel = () => {
                                     },
                                 ]}
                             >
-                                <Input />
+                                <Input
+                                    onChange={(e) =>
+                                        setCategoryName(e.target.value)
+                                    }
+                                />
                             </Form.Item>
                             <Form.Item
                                 labelCol={{ span: 5 }}
