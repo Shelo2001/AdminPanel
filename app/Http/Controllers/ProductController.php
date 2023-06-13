@@ -2,8 +2,12 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Product;
 use App\Models\Category;
+use App\Models\ProductImage;
 use Illuminate\Http\Request;
+use App\Models\ProductCategories;
+use Intervention\Image\Facades\Image;
 
 class ProductController extends Controller
 {
@@ -23,5 +27,42 @@ class ProductController extends Controller
         $categories = Category::all();
 
         return response()->json(['categories' => $categories]);
+    }
+
+    public function createProduct(Request $request){
+        $validatedData = $request->validate([
+            'name' => 'required',
+            'description' => 'required',
+            'price' => 'required',
+            'images' => 'required',
+            'categories' => 'required',
+        ]);
+    
+        $product = new Product;
+        $product->name = $validatedData->name;
+        $product->description = $validatedData->description;
+        $product->price = $validatedData->price;
+        $product->save();
+    
+        foreach ($validatedData['images'] as $image) {
+            $productImage = new ProductImage;
+            $strpos = strpos($image, ';');
+            $sub = substr($image, 0, $strpos);
+            $ex = explode('/', $sub)[1];
+            $name = time().'.'.$ex;
+            $img = Image::make($image)->resize(117,100);
+            $upload_path = public_path()."/upload/";
+            $img->save($upload_path.$name);
+            $productImage->src = $name;
+            $productImage->id = $product->id;
+        }
+    
+        foreach ($validatedData['categories'] as $category) {
+            $productCategories = new ProductCategories;
+            $productImage->product_id = $product->id;
+            $productImage->category = $category->name;
+        }
+
+        return response(["success"=>true]);
     }
 }

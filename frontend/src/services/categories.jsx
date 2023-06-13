@@ -28,5 +28,22 @@ export const useCategories = create(
                 }, 3000);
             }
         },
+        createProduct: async (data) => {
+            const res = await axios.post(
+                `${import.meta.env.VITE_API_URL}/product/create`,
+                data
+            );
+            if (res.data.success == true) {
+                set({
+                    success: `Product - ${data.name} - created successfully`,
+                });
+
+                setTimeout(() => {
+                    set({
+                        success: null,
+                    });
+                }, 3000);
+            }
+        },
     }))
 );

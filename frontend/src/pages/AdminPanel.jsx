@@ -19,6 +19,7 @@ import { useCategories } from "../services/categories";
 
 const AdminPanel = () => {
     const [fileList, setFileList] = useState([]);
+    const [productCategories, setProductCategories] = useState([]);
     const [categoryName, setCategoryName] = useState("");
 
     const { createCategory, getCategories, categories, success } =
@@ -57,14 +58,17 @@ const AdminPanel = () => {
         const updatedList = fileList.filter((item) => item.uid !== file.uid);
         setFileList(updatedList);
     };
-    const handleProductSubmit = () => {};
     const handleCategorySubmit = () => {
         let data = { name: categoryName };
         createCategory(data);
     };
 
-    const handleChange = (value) => {
-        console.log(`selected ${value}`);
+    const handleChange = (selectedValues) => {
+        setProductCategories(selectedValues);
+    };
+
+    const handleProductSubmit = () => {
+        let data = {};
     };
 
     return (
@@ -158,6 +162,7 @@ const AdminPanel = () => {
                                     }}
                                     placeholder="select one category"
                                     onChange={handleChange}
+                                    value={productCategories}
                                     optionLabelProp="label"
                                 >
                                     {categories.map((c) => (
