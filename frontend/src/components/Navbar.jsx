@@ -1,8 +1,8 @@
-import { DesktopOutlined, PieChartOutlined } from "@ant-design/icons";
+import { ControlOutlined, HomeOutlined } from "@ant-design/icons";
 import { Layout, Menu, theme } from "antd";
 import { useState } from "react";
 import { Outlet } from "react-router";
-import { Link, useLocation } from "react-router-dom";
+import { Link } from "react-router-dom";
 const { Header, Content, Sider } = Layout;
 function getItem(label, key, icon, to) {
     return {
@@ -13,8 +13,8 @@ function getItem(label, key, icon, to) {
     };
 }
 const items = [
-    getItem("Home", "1", <PieChartOutlined />, "/products"),
-    getItem("Admin Panel", "2", <DesktopOutlined />, "/adminpanel"),
+    getItem("Home", "1", <HomeOutlined />, "/products"),
+    getItem("Admin Panel", "2", <ControlOutlined />, "/adminpanel"),
 ];
 
 const Navbar = () => {
