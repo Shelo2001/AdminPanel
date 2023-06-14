@@ -50,7 +50,7 @@ class ProductController extends Controller
                 $strpos = strpos($image, ';');
                 $sub = substr($image, 0, $strpos);
                 $ex = explode('/', $sub)[1];
-                $name = time().'.'.$ex;
+                $name = time().'_'.uniqid().'.'.$ex;
                 $img = Image::make($image)->resize(117,100);
                 $upload_path = public_path()."/upload/";
                 $img->save($upload_path.$name);
