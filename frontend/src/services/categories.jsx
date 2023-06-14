@@ -52,5 +52,25 @@ export const useCategories = create(
             );
             set({ products: await res.data.products });
         },
+        deleteProductById: async (id) => {
+            const res = await axios.delete(
+                `${import.meta.env.VITE_API_URL}/products/${id}`
+            );
+            if (res.data.success) {
+                set({
+                    success: `Product deleted successfully`,
+                });
+                set((prevState) => ({
+                    products: prevState.products.filter(
+                        (product) => product.id !== id
+                    ),
+                }));
+                setTimeout(() => {
+                    set({
+                        success: null,
+                    });
+                }, 3000);
+            }
+        },
     }))
 );

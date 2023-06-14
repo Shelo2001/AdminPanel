@@ -74,4 +74,11 @@ class ProductController extends Controller
 
         return response()->json(['products' => $products]);
     }
+
+    public function deleteProductById($id){
+        $products = Product::where('id', $id)->delete();
+
+        return response()->json(['success' => 'successfully deleted product']);
+    }
+
 }

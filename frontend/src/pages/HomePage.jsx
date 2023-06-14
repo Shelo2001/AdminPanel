@@ -1,13 +1,18 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { Helmet } from "react-helmet";
 import { useCategories } from "../services/categories";
-import { Button, Table, Tag } from "antd";
+import { Button, Input, Table, Tag } from "antd";
 import { DeleteOutlined, EyeOutlined } from "@ant-design/icons";
 import Slider from "react-slick";
 
 const HomePage = () => {
-    const { getProducts, products, getCategories, categories } =
-        useCategories();
+    const {
+        getProducts,
+        products,
+        getCategories,
+        categories,
+        deleteProductById,
+    } = useCategories();
 
     useEffect(() => {
         getProducts();
@@ -53,7 +58,14 @@ const HomePage = () => {
                 <Button type="primary" success>
                     <EyeOutlined />
                 </Button>
-                <Button style={{ marginLeft: "30px" }} type="primary" danger>
+                <Button
+                    style={{ marginLeft: "30px" }}
+                    type="primary"
+                    onClick={() => {
+                        deleteProductById(p.id);
+                    }}
+                    danger
+                >
                     <DeleteOutlined />
                 </Button>
             </>

@@ -19,3 +19,4 @@ Route::get('/categories', [ProductController::class,'getCategories']);
 Route::post('/categories', [ProductController::class,'createCategory']);
 Route::post('/product/create', [ProductController::class,'createProduct']);
 Route::get('/products', [ProductController::class,'getProducts']);
+Route::delete('/products/{id}', [ProductController::class,'deleteProductById']);
