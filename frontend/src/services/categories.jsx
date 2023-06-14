@@ -48,10 +48,12 @@ export const useCategories = create(
                 }, 3000);
             }
         },
-        getProducts: async () => {
+        getProducts: async (filters) => {
+            const query = new URLSearchParams(filters).toString();
             const res = await axios.get(
-                `${import.meta.env.VITE_API_URL}/products`
+                `${import.meta.env.VITE_API_URL}/products?${query}`
             );
+
             set({ products: await res.data.products });
         },
         deleteProductById: async (id) => {

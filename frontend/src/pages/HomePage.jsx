@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { Helmet } from "react-helmet";
 import { useCategories } from "../services/categories";
-import { Button, Input, Table, Tag } from "antd";
+import { Button, Input, Table, Tag, Slider as PriceSlider } from "antd";
 import { DeleteOutlined, EyeOutlined } from "@ant-design/icons";
 import Slider from "react-slick";
 import { Link } from "react-router-dom";
@@ -15,10 +15,19 @@ const HomePage = () => {
         deleteProductById,
     } = useCategories();
 
+    const [nameFilter, setNameFilter] = useState("");
+    const [descriptionFilter, setDescriptionFilter] = useState("");
+    const [priceRange, setPriceRange] = useState([0, 10000]);
+
     useEffect(() => {
-        getProducts();
+        getProducts({
+            name: nameFilter,
+            description: descriptionFilter,
+            minPrice: priceRange[0],
+            maxPrice: priceRange[1],
+        });
         getCategories();
-    }, []);
+    }, [nameFilter, descriptionFilter]);
 
     const settings = {
         dots: true,
@@ -49,7 +58,10 @@ const HomePage = () => {
             </Slider>
         ),
         name: p.name,
-        description: p.description.substring(0, 30),
+        description:
+            p.description.length > 30
+                ? `${p.description.substring(0, 30)}...`
+                : `${p.description}`,
         price: p.price,
         categories: p.categories.map((category) => (
             <Tag>{category.category}</Tag>
@@ -86,10 +98,6 @@ const HomePage = () => {
             title: "Name",
             dataIndex: "name",
             key: "name",
-            filters: [
-                { text: "Ascending", value: "Asc" },
-                { text: "Descending", value: "Desc" },
-            ],
         },
         {
             title: "Description",
@@ -113,6 +121,9 @@ const HomePage = () => {
                 text: c.name,
                 value: c.name,
             })),
+            onFilter: (value, record) => {
+                console.log(value);
+            },
         },
         {
             title: "",
@@ -120,6 +131,15 @@ const HomePage = () => {
             key: "actions",
         },
     ];
+
+    const filterByPrice = () => {
+        getProducts({
+            name: nameFilter,
+            description: descriptionFilter,
+            minPrice: priceRange[0],
+            maxPrice: priceRange[1],
+        });
+    };
 
     return (
         <div>
@@ -131,6 +151,36 @@ const HomePage = () => {
                 />
                 <title>Products</title>
             </Helmet>
+            <div style={{ display: "flex", flexDirection: "column" }}>
+                <Input
+                    style={{ width: "50%", marginBottom: "20px" }}
+                    value={nameFilter}
+                    onChange={(e) => setNameFilter(e.target.value)}
+                    placeholder="Filter by name"
+                />
+                <Input
+                    style={{ width: "50%", marginBottom: "20px" }}
+                    value={descriptionFilter}
+                    onChange={(e) => setDescriptionFilter(e.target.value)}
+                    placeholder="Filter by description"
+                />
+
+                <div style={{ display: "flex" }}>
+                    <PriceSlider
+                        style={{ width: "50%", marginBottom: "20px" }}
+                        range
+                        min={0}
+                        max={10000}
+                        onChange={setPriceRange}
+                    />
+                    <Button
+                        style={{ marginLeft: "20px" }}
+                        onClick={() => filterByPrice()}
+                    >
+                        Filter By Price
+                    </Button>
+                </div>
+            </div>
             <Table dataSource={dataSource} columns={columns} />
         </div>
     );

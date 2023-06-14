@@ -64,17 +64,29 @@ const SingleProduct = () => {
                                 }}
                             >
                                 <div style={{ marginRight: "30px" }}>
-                                    <DollarOutlined />
-                                    <Text style={{ marginLeft: "5px" }} strong>
+                                    <DollarOutlined
+                                        style={{ fontSize: "20px" }}
+                                    />
+                                    <Text
+                                        style={{
+                                            marginLeft: "5px",
+                                            fontSize: "20px",
+                                        }}
+                                        strong
+                                    >
                                         {product.price}
                                     </Text>
                                 </div>
 
                                 <div>
-                                    <TagsOutlined />
+                                    <TagsOutlined
+                                        style={{ fontSize: "20px" }}
+                                    />
                                     {product?.categories?.map((category) => (
                                         <Tag
-                                            style={{ marginLeft: "10px" }}
+                                            style={{
+                                                marginLeft: "10px",
+                                            }}
                                             key={category.id}
                                         >
                                             {category.category}

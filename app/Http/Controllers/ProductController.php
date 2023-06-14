@@ -69,8 +69,26 @@ class ProductController extends Controller
         return response(["success"=>true]);
     }
 
-    public function getProducts(){
-        $products = Product::with('Images', 'Categories')->get();
+    public function getProducts(Request $request){
+        $query = Product::query();
+
+        if ($request->has('name')) {
+            $query->where('name', 'like', '%' . $request->input('name') . '%');
+        }
+
+        if ($request->has('description')) {
+            $query->where('description', 'like', '%' . $request->input('description') . '%');
+        }
+
+        if ($request->has('minPrice')) {
+            $query->where('price', '>=',$request->input('minPrice'));
+        }
+
+        if ($request->has('maxPrice')) {
+            $query->where('price', '<=',$request->input('maxPrice'));
+        }
+
+        $products = $query->with('Images', 'Categories')->get();
 
         return response()->json(['products' => $products]);
     }
