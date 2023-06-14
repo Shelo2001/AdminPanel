@@ -1,10 +1,12 @@
 import React, { useEffect } from "react";
 import { useParams } from "react-router";
+import { Link } from "react-router-dom";
 import { useCategories } from "../services/categories";
 import Loader from "../components/Loader";
 import Slider from "react-slick";
-import { Divider, Tag, Typography } from "antd";
-import { DollarOutlined, TagsOutlined } from "@ant-design/icons";
+import { Button, Divider, Tag, Typography } from "antd";
+import { DollarOutlined, LeftOutlined, TagsOutlined } from "@ant-design/icons";
+import { Helmet } from "react-helmet";
 
 const SingleProduct = () => {
     const { id } = useParams();
@@ -28,9 +30,38 @@ const SingleProduct = () => {
     return (
         <div>
             {loading ? (
-                <Loader />
+                <>
+                    <Helmet>
+                        <meta
+                            charSet="utf-8"
+                            name="description"
+                            content="View and manage products on our website"
+                        />
+                        <title>Loading...</title>
+                    </Helmet>
+                    <Loader />
+                </>
             ) : (
                 <div className="single-product">
+                    <Helmet>
+                        <meta
+                            charSet="utf-8"
+                            name="description"
+                            content="View and manage products on our website"
+                        />
+                        <title>{product.name}</title>
+                    </Helmet>
+
+                    <Link to="/products">
+                        <Button
+                            style={{ position: "absolute", top: "10px" }}
+                            type="primary"
+                            shape="circle"
+                            icon={<LeftOutlined />}
+                            size={"large"}
+                        />
+                    </Link>
+
                     <div className="product-container">
                         <div>
                             <Slider
