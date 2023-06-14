@@ -5,6 +5,7 @@ import axios from "axios";
 export const useCategories = create(
     devtools((set) => ({
         categories: [],
+        products: [],
         getCategories: async () => {
             const res = await axios.get(
                 `${import.meta.env.VITE_API_URL}/categories`
@@ -44,6 +45,12 @@ export const useCategories = create(
                     });
                 }, 3000);
             }
+        },
+        getProducts: async () => {
+            const res = await axios.get(
+                `${import.meta.env.VITE_API_URL}/products`
+            );
+            set({ products: await res.data.products });
         },
     }))
 );

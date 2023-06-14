@@ -39,30 +39,39 @@ class ProductController extends Controller
         ]);
     
         $product = new Product;
-        $product->name = $validatedData->name;
-        $product->description = $validatedData->description;
-        $product->price = $validatedData->price;
+        $product->name = $validatedData['name'];
+        $product->description = $validatedData['description'];
+        $product->price = $validatedData['price'];
         $product->save();
-    
+
         foreach ($validatedData['images'] as $image) {
-            $productImage = new ProductImage;
-            $strpos = strpos($image, ';');
-            $sub = substr($image, 0, $strpos);
-            $ex = explode('/', $sub)[1];
-            $name = time().'.'.$ex;
-            $img = Image::make($image)->resize(117,100);
-            $upload_path = public_path()."/upload/";
-            $img->save($upload_path.$name);
-            $productImage->src = $name;
-            $productImage->id = $product->id;
+            
+                $productImage = new ProductImage;
+                $strpos = strpos($image, ';');
+                $sub = substr($image, 0, $strpos);
+                $ex = explode('/', $sub)[1];
+                $name = time().'.'.$ex;
+                $img = Image::make($image)->resize(117,100);
+                $upload_path = public_path()."/upload/";
+                $img->save($upload_path.$name);
+                $productImage->src = $name;
+                $productImage->product_id = $product->id;
+                $productImage->save();
         }
     
         foreach ($validatedData['categories'] as $category) {
             $productCategories = new ProductCategories;
-            $productImage->product_id = $product->id;
-            $productImage->category = $category->name;
+            $productCategories->product_id = $product->id;
+            $productCategories->category = $category;
+            $productCategories->save();
         }
 
         return response(["success"=>true]);
+    }
+
+    public function getProducts(){
+        $products = Product::with('Images', 'Categories')->get();
+
+        return response()->json(['products' => $products]);
     }
 }

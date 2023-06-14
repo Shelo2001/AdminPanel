@@ -22,8 +22,17 @@ const AdminPanel = () => {
     const [productCategories, setProductCategories] = useState([]);
     const [categoryName, setCategoryName] = useState("");
 
-    const { createCategory, getCategories, categories, success } =
-        useCategories();
+    const [name, setName] = useState("");
+    const [price, setPrice] = useState(0);
+    const [description, setDescription] = useState("");
+
+    const {
+        createCategory,
+        getCategories,
+        categories,
+        success,
+        createProduct,
+    } = useCategories();
 
     useEffect(() => {
         getCategories();
@@ -32,22 +41,7 @@ const AdminPanel = () => {
     const handleBeforeUpload = (file) => {
         const reader = new FileReader();
         reader.onload = () => {
-            const dataURL = reader.result;
-            const image = new Image();
-            image.src = dataURL;
-            image.onload = () => {
-                const imageObj = {
-                    uid: file.uid,
-                    name: file.name,
-                    status: "done",
-                    url: dataURL,
-                    size: file.size,
-                    type: file.type,
-                    width: image.width,
-                    height: image.height,
-                };
-                setFileList((prevList) => [...prevList, imageObj]);
-            };
+            setFileList((prevList) => [...prevList, reader.result]);
         };
         reader.readAsDataURL(file);
 
@@ -68,7 +62,15 @@ const AdminPanel = () => {
     };
 
     const handleProductSubmit = () => {
-        let data = {};
+        let data = {
+            name,
+            price,
+            description,
+            images: fileList,
+            categories: productCategories,
+        };
+
+        createProduct(data);
     };
 
     return (
@@ -111,7 +113,9 @@ const AdminPanel = () => {
                                     },
                                 ]}
                             >
-                                <Input />
+                                <Input
+                                    onChange={(e) => setName(e.target.value)}
+                                />
                             </Form.Item>
                             <Form.Item
                                 label="Description"
@@ -125,7 +129,12 @@ const AdminPanel = () => {
                                     },
                                 ]}
                             >
-                                <TextArea rows={4} />
+                                <TextArea
+                                    rows={4}
+                                    onChange={(e) =>
+                                        setDescription(e.target.value)
+                                    }
+                                />
                             </Form.Item>
                             <Form.Item
                                 label="Price"
@@ -139,7 +148,9 @@ const AdminPanel = () => {
                                     },
                                 ]}
                             >
-                                <Input />
+                                <Input
+                                    onChange={(e) => setPrice(e.target.value)}
+                                />
                             </Form.Item>
 
                             <Form.Item
@@ -160,7 +171,7 @@ const AdminPanel = () => {
                                     style={{
                                         width: "100%",
                                     }}
-                                    placeholder="select one category"
+                                    placeholder="select category"
                                     onChange={handleChange}
                                     value={productCategories}
                                     optionLabelProp="label"
