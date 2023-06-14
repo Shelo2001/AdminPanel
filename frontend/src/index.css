@@ -4,3 +4,11 @@ body {
 .slick-current {
     width: 100px !important;
 }
+.single-product .slick-current {
+    width: 500px !important;
+    height: 500px !important;
+}
+.product-container {
+    display: flex;
+    gap: 10%;
+}

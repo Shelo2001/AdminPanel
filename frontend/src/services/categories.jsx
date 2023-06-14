@@ -6,6 +6,8 @@ export const useCategories = create(
     devtools((set) => ({
         categories: [],
         products: [],
+        product: {},
+        loading: false,
         getCategories: async () => {
             const res = await axios.get(
                 `${import.meta.env.VITE_API_URL}/categories`
@@ -71,6 +73,16 @@ export const useCategories = create(
                     });
                 }, 3000);
             }
+        },
+        getProductById: async (id) => {
+            set({ loading: true });
+            const res = await axios.get(
+                `${import.meta.env.VITE_API_URL}/products/${id}`
+            );
+            set({
+                loading: false,
+                product: res.data.product,
+            });
         },
     }))
 );

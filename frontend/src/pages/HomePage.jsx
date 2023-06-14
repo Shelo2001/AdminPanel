@@ -4,6 +4,7 @@ import { useCategories } from "../services/categories";
 import { Button, Input, Table, Tag } from "antd";
 import { DeleteOutlined, EyeOutlined } from "@ant-design/icons";
 import Slider from "react-slick";
+import { Link } from "react-router-dom";
 
 const HomePage = () => {
     const {
@@ -55,9 +56,11 @@ const HomePage = () => {
         )),
         actions: (
             <>
-                <Button type="primary" success>
-                    <EyeOutlined />
-                </Button>
+                <Link to={`/products/${p.id}`}>
+                    <Button type="primary" success>
+                        <EyeOutlined />
+                    </Button>
+                </Link>
                 <Button
                     style={{ marginLeft: "30px" }}
                     type="primary"

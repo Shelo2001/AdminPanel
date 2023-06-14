@@ -76,9 +76,13 @@ class ProductController extends Controller
     }
 
     public function deleteProductById($id){
-        $products = Product::where('id', $id)->delete();
+        $product = Product::where('id', $id)->delete();
 
         return response()->json(['success' => 'successfully deleted product']);
     }
+    public function getProductById($id){
+        $product = Product::where('id', $id)->with('Images','Categories')->first();
 
+        return response()->json(['product' => $product]);
+    }
 }
